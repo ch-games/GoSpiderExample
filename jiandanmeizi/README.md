@@ -6,4 +6,4 @@
 
 运行`go run main.go`
 
-已经封装成exe!
+已经封装成exe （并没有）!
