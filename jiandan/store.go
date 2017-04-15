@@ -48,7 +48,7 @@ func init() {
   tags varchar(255) NOT NULL DEFAULT '',
   content longtext NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='煎蛋文章';`
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='煎蛋文章';`
 
 	// create
 	_, err = MysqlClient.Create(sql)
