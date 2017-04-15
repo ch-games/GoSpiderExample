@@ -61,6 +61,7 @@ func IndexStep() {
 	if e != nil {
 		spider.Log().Panic(e.Error())
 	}
+	SentRedis(ParseIndex(data))
 }
 
 // 步骤2：分配任务

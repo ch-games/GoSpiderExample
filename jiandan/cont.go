@@ -16,6 +16,7 @@ import (
 	"fmt"
 	"github.com/hunterhug/GoSpider/spider"
 	"github.com/hunterhug/GoSpider/store/myredis"
+	"github.com/hunterhug/GoSpider/store/mysql"
 	"github.com/hunterhug/GoSpider/util"
 	"path/filepath"
 )
@@ -59,11 +60,25 @@ var (
 	RedisListTodo  = "jiandantodo"
 	RedisListDoing = "jiandandoing"
 	RedisListDone  = "jiandandone"
+
+	// mysql config
+	mysqlconfig = mysql.MysqlConfig{
+		Username: "root",
+		Password: "smart2016",
+		Ip:       "127.0.0.1",
+		Port:     "3306",
+		Dbname:   "jiandan",
+	}
+
+	MysqlClient mysql.Mysql
 )
 
 // 设置全局
 func init() {
-	util.MakeDir(filepath.Join(RootDir, "data", "detail"))
+	e := util.MakeDir(filepath.Join(RootDir, "data", "detail"))
+	if e != nil {
+		spider.Log().Panic(e.Error())
+	}
 	spider.SetGlobalTimeout(StopTime)
 	spider.SetLogLevel(LogLevel)
 	indexstopchan = make(chan bool, 1)

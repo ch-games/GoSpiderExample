@@ -53,6 +53,9 @@ func ParseIndex(data []byte) []string {
 		//	return
 		//}
 		url, _ := node.Find("h2").Find("a").Attr("href")
+		if url == "" {
+			return
+		}
 		//tag := node.Find(".time_s").Text()
 		//if strings.Contains(tag, "·") {
 		//	tag = strings.Split(tag, "·")[1]
@@ -63,7 +66,31 @@ func ParseIndex(data []byte) []string {
 	return list
 }
 
+func ParseDetail(data []byte) map[string]string {
+	returnmap := map[string]string{
+		"title": "", "tags": "", "content": "", "shortcontent": "",
+	}
+	doc, e := query.QueryBytes(data)
+	if e != nil {
+		return returnmap
+	}
+	// 标题
+	title := doc.Find("title").Text()
+	if strings.TrimSpace(title) == "" {
+		return returnmap
+	}
+	shortcontent, _ := doc.Find(`meta[name="description"]`).Attr("content")
+	tags, _ := doc.Find(`meta[name="keywords"]`).Attr("content")
 
-func ParseDetail(data []byte){
+	result := ""
+	doc.Find("#content").Find(".post p").Each(func(num int, node *goquery.Selection) {
+		temp, _ := node.Html()
+		result = result + "<p>" + temp + "</p>"
+	})
 
+	returnmap["title"] = strings.Replace(title,"\"","'",-1)
+	returnmap["tags"] = strings.Replace(tags,"\"","'",-1)
+	returnmap["shortcontent"] = strings.Replace(shortcontent,"\"","'",-1)
+	returnmap["content"] = strings.Replace(result,"\"","'",-1)
+	return returnmap
 }

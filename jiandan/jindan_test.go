@@ -17,7 +17,6 @@ import (
 	"github.com/hunterhug/GoSpider/util"
 	"path/filepath"
 	//"strings"
-	"github.com/hunterhug/GoSpider/query"
 	"testing"
 )
 
@@ -84,20 +83,11 @@ func TestRedis(t *testing.T) {
 }
 
 func TestParseDetail(t *testing.T) {
-	data, e := util.ReadfromFile(filepath.Join(RootDir, "data", "detail", "http###jandan.net#2011#02#03#skin-gun.html"))
+	data, e := util.ReadfromFile(filepath.Join(RootDir, "data", "detail", util.ValidFileName("http://jandan.net/2017/04/15/shit.html")))
 	if e != nil {
 		t.Error(e.Error())
 	}
-	doc, e := query.QueryBytes(data)
-	if e != nil {
-		t.Error(e.Error())
-		return
-	}
-	// 标题
-	title :=doc.Find("title").Text()
-	// 标签
-	tag :=doc.Find("#content").Find("h3 a").Text()
+	info := ParseDetail(data)
 
-	result:= doc.Find("#content").Find(".post").Nodes
-	t.Logf("%v,%v,%v", title,tag,result)
+	t.Logf("%#v", info)
 }

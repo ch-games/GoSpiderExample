@@ -55,12 +55,13 @@ func DetailTaskStep(name int) {
 			// 删除Doing!
 			RedisClient.Lrem(RedisListDoing, 0, url)
 			// 读取后解析存储
-			/*data,e:=util.ReadfromFile(filename)
-			if e!=nil{
-				spider.Log().Errorf("take from file %s error: %s",filename,e.Error())
-			}else{
-				StoreInfo(ParseDetail(data))
-			}*/
+			data, e := util.ReadfromFile(filename)
+			if e != nil {
+				spider.Log().Errorf("take from file %s error: %s", filename, e.Error())
+			} else {
+				SaveToMysql(url, ParseDetail(data))
+			}
+			RedisClient.Hset(RedisListDone, url, "")
 			continue
 		}
 		s.SetUrl(url)
@@ -81,10 +82,8 @@ func DetailTaskStep(name int) {
 					spider.Log().Errorf("file %s save error:%s", filename, e.Error())
 				}
 
-				//e:=StoreInfo(ParseDetail(data))
-				//if e!=nil{
-				//	break
-				// }
+				SaveToMysql(url, ParseDetail(data))
+
 				// 删除Doing!
 				RedisClient.Lrem(RedisListDoing, 0, url)
 				// 送到Done中

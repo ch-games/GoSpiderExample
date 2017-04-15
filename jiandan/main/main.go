@@ -19,15 +19,19 @@ import (
 	"os/signal"
 )
 
+var Clear = false
+
 func main() {
-	// 首页爬虫爬取
-	//go jiandan.IndexSpiderRun()
+	if Clear {
+		// Reids中Doing的迁移到Todo，需手动，var Clear = true
+		go jiandan.Clear()
+	} else {
+		// 首页爬虫爬取
+		go jiandan.IndexSpiderRun()
 
-	// 详情页抓取
-	go jiandan.DetailSpidersRun()
-
-	// Reids中Doing的迁移到Todo，需手动，手动之前前面所有Go语句都要去掉！
-	//go jiandan.Clear()
+		// 详情页抓取
+		go jiandan.DetailSpidersRun()
+	}
 
 	c := make(chan os.Signal)
 	//监听指定信号

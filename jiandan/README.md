@@ -2,7 +2,8 @@
 
 1. cont.go编辑配置，`RootDir = "E:\\jiandan"`为数据目录
 2. 进main文件夹运行
-3. 数据保存在data文件夹中和数据库中
+3. 数据保存在data和数据库中
+4. 重抓要删除Redis数据库和文件夹
 
 ```
 /*
@@ -26,15 +27,19 @@ import (
 	"os/signal"
 )
 
+var Clear = false
+
 func main() {
-	// 首页爬虫爬取
-	//go jiandan.IndexSpiderRun()
+	if Clear {
+		// Reids中Doing的迁移到Todo，需手动，var Clear = true
+		go jiandan.Clear()
+	} else {
+		// 首页爬虫爬取
+		go jiandan.IndexSpiderRun()
 
-	// 详情页抓取
-	go jiandan.DetailSpidersRun()
-
-	// Reids中Doing的迁移到Todo，需手动
-	//go jiandan.Clear()
+		// 详情页抓取
+		go jiandan.DetailSpidersRun()
+	}
 
 	c := make(chan os.Signal)
 	//监听指定信号
