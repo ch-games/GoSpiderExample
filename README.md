@@ -17,6 +17,11 @@
 
 2.[jiandan煎蛋项目爬妹子](jiandanmeizi/README.md)，啥Redis都不用，准备好网速就行！
 
+![jiandanmeizi/meizi.png](jiandanmeizi/meizi.png)
+
+已经封装了exe（自己 go build 吧），小心开车。
+
+总共爬取了....张图片，程序会自动去重
 
 ## 环境配置
 请查看[https://github.com/hunterhug/AmazonBigSpider/blob/master/china.md](https://github.com/hunterhug/AmazonBigSpider/blob/master/china.md)
