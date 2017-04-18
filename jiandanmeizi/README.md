@@ -6,4 +6,6 @@
 
 运行`go run main.go`
 
-已经封装成exe （并没有）!
+已经封装成exe （点击meizispider.exe）!
+
+哟哟哦哟哟哟哟哟~
