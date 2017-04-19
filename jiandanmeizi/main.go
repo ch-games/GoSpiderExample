@@ -33,6 +33,7 @@ func main() {
 	urlpage := "http://jandan.net/ooxx/page-%d"
 
 	// 保存的地方
+	// 最后干脆不要了，图片太多，全部分散到hash文件中
 	rootdir := "D:\\jiandan"
 
 	// hash图片，不然图片太大了
@@ -43,6 +44,7 @@ func main() {
 	// 图片集中地
 	util.MakeDir(rootdir)
 
+	// 16份
 	dirs := []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"}
 	for _, i := range dirs {
 		util.MakeDir(hashdir + "/" + i)
@@ -126,9 +128,12 @@ func main() {
 			}
 			// 大本营存在？
 			exist := util.FileExist(filedir)
-			if exist {
-				// hash存在？
-				exist2 := util.FileExist(hashfiledir)
+			
+			// hash存在？
+			exist2 := util.FileExist(hashfiledir)
+			
+			// hash不存在，大本营存在
+			if !exist2 && exist {
 				if !exist2 {
 					// 读出来
 					temp, e := util.ReadfromFile(filedir)
@@ -143,7 +148,12 @@ func main() {
 				// spider.Log().Infof("image file %s exist", filedir)
 				return
 			}
-
+			
+			// hash存在
+			if exist2 {
+				return
+			}
+			
 			// 补充img url
 			if strings.HasPrefix(imgurl, "//") {
 				imgurl = "http:" + imgurl
@@ -159,14 +169,13 @@ func main() {
 
 			//spider.Log().Infof("image page %s done!", imgurl)
 
-			// 保存
-			e = util.SaveToFile(filedir, data)
-			// 出错也没办法
-			util.SaveToFile(hashfiledir, data)
+			// 大本营不再保存
+			// e = util.SaveToFile(filedir, data)
+			e = util.SaveToFile(hashfiledir, data)
 			if e != nil {
-				spider.Log().Errorf("image keep %s error:%s", filedir, e.Error())
+				spider.Log().Errorf("image keep %s error:%s", hashfiledir, e.Error())
 			} else {
-				spider.Log().Infof("image save %s", filedir)
+				spider.Log().Infof("image save %s", hashfiledir)
 			}
 
 		})
