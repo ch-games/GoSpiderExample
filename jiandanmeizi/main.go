@@ -24,7 +24,8 @@ import (
 func init() {
 	// 设置日志和超时时间
 	spider.SetLogLevel("info")
-	spider.SetGlobalTimeout(1)
+	// 有些图片好大！
+	spider.SetGlobalTimeout(15)
 }
 func main() {
 	// 单只爬虫，请耐心爬取好吗
@@ -80,7 +81,7 @@ func main() {
 			if !ok {
 				return
 			}
-			spider.Log().Infof("img:%s", imgurl)
+			//spider.Log().Infof("img:%s", imgurl)
 
 			// 去重 处理
 			temp := strings.Split(imgurl, ".")
@@ -96,7 +97,7 @@ func main() {
 			// 存在则退出
 			exist := util.FileExist(filedir)
 			if exist {
-				spider.Log().Infof("image file %s exist", filedir)
+				// spider.Log().Infof("image file %s exist", filedir)
 				return
 			}
 
@@ -113,7 +114,7 @@ func main() {
 				return
 			}
 
-			spider.Log().Infof("image page %s done!", imgurl)
+			//spider.Log().Infof("image page %s done!", imgurl)
 
 			// 保存
 			e = util.SaveToFile(filedir, data)
