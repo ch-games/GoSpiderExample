@@ -25,7 +25,7 @@ func init() {
 	// 设置日志和超时时间
 	spider.SetLogLevel("info")
 	// 有些图片好大！
-	spider.SetGlobalTimeout(15)
+	spider.SetGlobalTimeout(100)
 }
 func main() {
 	// 单只爬虫，请耐心爬取好吗
@@ -34,7 +34,20 @@ func main() {
 
 	// 保存的地方
 	rootdir := "C:\\jiandan"
+
+	// hash图片，不然图片太大了
+	hashdir := "C:\\jiandanhash"
+
+	// 图片集中地
 	util.MakeDir(rootdir)
+
+	dirs := []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"}
+	for _, i := range dirs {
+		util.MakeDir(hashdir + "/" + i)
+
+		// gif文件夹
+		util.MakeDir(hashdir + "/gif-" + i)
+	}
 
 	// 初始化爬虫
 	client, _ := spider.NewSpider(nil)
@@ -89,14 +102,42 @@ func main() {
 			if tempnum <= 1 {
 				return
 			}
+
+			// 后缀
+			houzui := temp[tempnum-1]
+
 			// 文件名
-			filename := util.Md5(imgurl) + "." + temp[tempnum-1]
-			// 文件路径
+			filename := util.Md5(imgurl) + "." + houzui
+
+			// 图片首字母
+			firstchar := string(filename[0])
+
+			// 大本营文件路径
 			filedir := rootdir + "/" + filename
 
-			// 存在则退出
+			// hash分图
+			var hashfiledir string
+			if houzui == "gif" {
+				hashfiledir = hashdir + "/gif-" + firstchar + "/" + filename
+			} else {
+				hashfiledir = hashdir + "/" + firstchar + "/" + filename
+			}
+			// 大本营存在？
 			exist := util.FileExist(filedir)
 			if exist {
+				// hash存在？
+				exist2 := util.FileExist(hashfiledir)
+				if !exist2 {
+					// 读出来
+					temp, e := util.ReadfromFile(filedir)
+					// 出错不管
+					if e != nil {
+						return
+					}
+					// 写，出错不管
+					util.SaveToFile(hashfiledir, temp)
+					return
+				}
 				// spider.Log().Infof("image file %s exist", filedir)
 				return
 			}
@@ -118,6 +159,8 @@ func main() {
 
 			// 保存
 			e = util.SaveToFile(filedir, data)
+			// 出错也没办法
+			util.SaveToFile(hashfiledir, data)
 			if e != nil {
 				spider.Log().Errorf("image keep %s error:%s", filedir, e.Error())
 			} else {
