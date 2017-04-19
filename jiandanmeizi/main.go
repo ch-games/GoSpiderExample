@@ -33,10 +33,12 @@ func main() {
 	urlpage := "http://jandan.net/ooxx/page-%d"
 
 	// 保存的地方
-	rootdir := "C:\\jiandan"
+	rootdir := "D:\\jiandan"
 
 	// hash图片，不然图片太大了
-	hashdir := "C:\\jiandanhash"
+	hashdir := "D:\\jiandanhash"
+	
+	// 图片太大硬盘会爆！
 
 	// 图片集中地
 	util.MakeDir(rootdir)
